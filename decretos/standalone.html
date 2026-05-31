@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modificaciones Presupuestarias 2026 â EducaciÃ³n 2020 (standalone)</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f4f8;
+    --surface: #ffffff;
+    --surface2: #eaeaf0;
+    --border: #d0d0e0;
+    --header-bg: #8c8cc8;
+    --accent: #282864;
+    --accent2: #5050a0;
+    --accent3: #8c8cc8;
+    --red: #b02030;
+    --green: #1a6040;
+    --text: #1a1a3a;
+    --text-muted: #5a5a7a;
+    --text-dim: #a0a0c0;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+    --display: 'Bebas Neue', sans-serif;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { max-width:100%; overflow-x:hidden; }
+  body { background:var(--bg); color:var(--text); font-family:var(--sans); font-size:14px; line-height:1.5; }
+
+  /* HEADER */
+  .header { background:var(--header-bg); padding:22px 40px 20px; }
+  .header-inner { max-width:1400px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap; }
+  .header-center { flex:1; padding:0 20px; }
+  .header-center h1 { font-family:var(--display); font-size:clamp(20px,2.8vw,34px); letter-spacing:0.06em; color:#fff; line-height:1; }
+  .header-center p { font-family:var(--mono); font-size:10px; color:rgba(255,255,255,0.65); margin-top:6px; letter-spacing:0.04em; }
+  .header-meta { text-align:right; font-family:var(--mono); font-size:10px; color:rgba(255,255,255,0.55); line-height:1.9; }
+  .header-meta strong { color:rgba(255,255,255,0.85); }
+
+  /* TOTALS */
+  .total-banner { background:var(--accent); padding:14px 40px 16px; }
+  .total-inner { max-width:1400px; margin:0 auto; display:flex; align-items:center; gap:28px; flex-wrap:wrap; }
+  .total-label { font-family:var(--mono); font-size:9px; text-transform:uppercase; letter-spacing:0.15em; color:rgba(220,220,240,0.5); }
+  .total-amount { font-family:var(--display); font-size:38px; letter-spacing:0.02em; }
+  .total-amount.red { color:#f0a0a8; }
+  .total-amount.green { color:#90d0b0; }
+  .total-sub { font-family:var(--mono); font-size:10px; color:rgba(220,220,240,0.45); }
+  .total-sub span { color:rgba(220,220,240,0.82); font-weight:600; }
+  .total-divider { width:1px; height:42px; background:rgba(255,255,255,0.15); }
+  .stat-block { display:flex; flex-direction:column; gap:1px; }
+  .stat-num { font-family:var(--display); font-size:26px; color:var(--accent3); }
+  .stat-desc { font-family:var(--mono); font-size:9px; color:rgba(220,220,240,0.45); text-transform:uppercase; letter-spacing:0.1em; }
+
+  /* CHART */
+  .chart-section { padding:20px 40px; border-bottom:1px solid var(--border); background:var(--surface); }
+  .chart-inner { max-width:1400px; margin:0 auto; }
+  .section-label { font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:0.15em; color:var(--text-muted); margin-bottom:14px; }
+  .chart-bars { display:flex; flex-direction:column; gap:6px; }
+  .chart-row { display:flex; align-items:center; gap:12px; animation:fadeIn 0.35s ease both; }
+  .chart-row-label { font-family:var(--mono); font-size:10px; color:var(--text-muted); width:200px; flex-shrink:0; text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .chart-row-bar-wrap { flex:1; background:var(--surface2); height:14px; overflow:hidden; position:relative; }
+  .chart-row-bar { height:100%; position:relative; }
+  .chart-row-bar.red  { background:linear-gradient(90deg,#8c2030,#c04050); }
+  .chart-row-bar.green { background:linear-gradient(90deg,#1a7050,#30a070); }
+  .chart-row-bar::after { content:attr(data-label); position:absolute; right:6px; top:50%; transform:translateY(-50%); font-family:var(--mono); font-size:9px; font-weight:600; color:white; white-space:nowrap; }
+  .chart-row-val { font-family:var(--mono); font-size:10px; color:var(--text-muted); width:110px; flex-shrink:0; text-align:right; }
+
+  /* TABS */
+  .chart-tabs { display:flex; gap:6px; margin-bottom:14px; }
+  .chart-tab { font-family:var(--mono); font-size:10px; padding:4px 10px; border:1px solid var(--border); cursor:pointer; color:var(--text-muted); background:var(--bg); text-transform:uppercase; letter-spacing:0.05em; }
+  .chart-tab.active { background:var(--accent); border-color:var(--accent); color:white; }
+
+  /* CONTROLS */
+  .controls { padding:13px 40px; border-bottom:1px solid var(--border); background:var(--surface); }
+  .controls-inner { max-width:1400px; margin:0 auto; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .search-box { position:relative; flex:1; min-width:180px; max-width:260px; }
+  .search-box input { width:100%; background:var(--bg); border:1px solid var(--border); color:var(--text); font-family:var(--mono); font-size:12px; padding:7px 10px 7px 28px; outline:none; transition:border-color 0.2s; }
+  .search-box input:focus { border-color:var(--accent); }
+  .search-box input::placeholder { color:var(--text-dim); }
+  .search-icon { position:absolute; left:8px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-size:12px; pointer-events:none; }
+  .filter-group { display:flex; gap:4px; flex-wrap:wrap; }
+  .filter-btn { background:var(--bg); border:1px solid var(--border); color:var(--text-muted); font-family:var(--mono); font-size:10px; padding:5px 9px; cursor:pointer; transition:all 0.15s; text-transform:uppercase; letter-spacing:0.04em; }
+  .filter-btn:hover { border-color:var(--accent2); color:var(--text); }
+  .filter-btn.active { background:var(--accent); border-color:var(--accent); color:white; font-weight:600; }
+  .sort-select { background:var(--bg); border:1px solid var(--border); color:var(--text); font-family:var(--mono); font-size:10px; padding:6px 9px; outline:none; cursor:pointer; margin-left:auto; }
+
+  /* RESULTS */
+  .results-info { padding:9px 40px; font-family:var(--mono); font-size:11px; color:var(--text-muted); border-bottom:1px solid var(--border); background:var(--surface); }
+  .results-inner { max-width:1400px; margin:0 auto; display:flex; justify-content:space-between; }
+
+  /* TABLE */
+  .table-container { padding:0 40px 40px; background:var(--bg); }
+  .table-inner { max-width:1400px; margin:0 auto; }
+  table { width:100%; border-collapse:collapse; }
+  thead tr { border-bottom:2px solid var(--accent); }
+  th { font-family:var(--mono); font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-muted); padding:13px 14px; text-align:left; cursor:pointer; user-select:none; white-space:nowrap; transition:color 0.15s; background:var(--bg); }
+  th:hover { color:var(--accent); }
+  th.sorted { color:var(--accent); }
+  th .sort-arrow { margin-left:3px; opacity:0.4; }
+  th.sorted .sort-arrow { opacity:1; }
+  th:last-child, th:nth-last-child(2) { text-align:right; }
+  tbody tr { border-bottom:1px solid var(--border); transition:background 0.1s; animation:fadeIn 0.3s ease both; }
+  tbody tr:hover { background:var(--surface); }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(3px)} to{opacity:1;transform:translateY(0)} }
+  td { padding:11px 14px; font-size:13px; vertical-align:middle; }
+  .td-decreto { font-family:var(--mono); font-size:11px; font-weight:600; color:var(--text-muted); white-space:nowrap; }
+  .td-ministerio { color:var(--text); max-width:340px; }
+  .td-fecha { font-family:var(--mono); font-size:11px; color:var(--text-muted); white-space:nowrap; }
+  .td-monto { text-align:right; white-space:nowrap; }
+  .monto-red  { font-family:var(--mono); font-size:13px; font-weight:600; color:var(--red); }
+  .monto-green { font-family:var(--mono); font-size:13px; font-weight:600; color:var(--green); }
+  .monto-zero { font-family:var(--mono); font-size:13px; color:var(--text-dim); }
+  .bar-cell { width:90px; }
+  .bar-wrap { background:var(--surface2); height:4px; width:100%; }
+  .bar-fill-red   { height:100%; background:#c04050; }
+  .bar-fill-green { height:100%; background:#30a070; }
+
+  /* FOOTER */
+  .footer { background:var(--accent); border-top:3px solid var(--header-bg); padding:16px 40px; }
+  .footer-inner { max-width:1400px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+  .footer p { font-family:var(--mono); font-size:10px; color:rgba(220,220,240,0.5); line-height:1.9; }
+  .footer strong { color:rgba(220,220,240,0.75); }
+  .empty-state { padding:50px 40px; text-align:center; font-family:var(--mono); color:var(--text-dim); }
+  .loading { padding:40px; text-align:center; font-family:var(--mono); font-size:12px; color:var(--text-dim); }
+
+  .th-short { display:none; }
+  .chart-row { cursor:pointer; border-radius:2px; transition:background 0.12s; }
+  .chart-row:hover { background:var(--surface2); }
+  .chart-row-selected { background:rgba(40,40,100,0.08) !important; }
+  .chart-row-selected .chart-row-label { color:var(--accent); font-weight:600; }
+
+  @media(max-width:768px){
+    .header,.controls,.table-container,.chart-section,.total-banner,.results-info,.footer{padding-left:12px;padding-right:12px}
+    .bar-cell{display:none}
+    .chart-row-label{width:90px;font-size:9px}
+    .header-meta{display:none}
+    .chart-tabs{overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+    .chart-tab{white-space:nowrap;font-size:9px;padding:3px 8px}
+    .total-amount{font-size:26px}
+    .stat-num{font-size:20px}
+    .total-inner{gap:10px}
+    .total-divider{display:none}
+    th:nth-child(3),td:nth-child(3),th:nth-child(4),td:nth-child(4),th:nth-child(7),td:nth-child(7){display:none}
+    table{table-layout:fixed;width:100%}
+    th:nth-child(1){width:56px}
+    th:nth-child(5),th:nth-child(6){width:70px}
+    td{padding:7px 6px;font-size:11px}
+    th{padding:8px 6px;font-size:8px;white-space:normal;word-break:break-word}
+    .td-ministerio{font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .monto-red,.monto-green,.monto-zero{font-size:11px}
+    .th-full{display:none}
+    .th-short{display:inline}
+    .controls-inner{flex-direction:column;align-items:stretch;gap:6px}
+    .search-box{max-width:100%;min-width:0;flex:1}
+    .sort-select{margin-left:0;width:100%}
+    .filter-group{justify-content:space-between}
+    .filter-btn{font-size:9px;padding:4px 6px}
+    .results-inner{flex-direction:column;gap:4px}
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-center">
+      <h1>Modificaciones Presupuestarias 2026</h1>
+      <p>Decretos de modificaciÃ³n presupuestaria â ContralorÃ­a General de la RepÃºblica Â· Datos procesados por EducaciÃ³n 2020</p>
+    </div>
+    <div class="header-meta">
+      <div><strong>Fuente</strong> DIPRES / ContralorÃ­a</div>
+      <div><strong>AÃ±o</strong> 2026</div>
+      <div><strong>ActualizaciÃ³n</strong> Mayo 2026</div>
+    </div>
+  </div>
+</div>
+
+<div class="total-banner">
+  <div class="total-inner">
+    <div class="stat-block">
+      <div class="total-label">Total reducciones</div>
+      <div class="total-amount red" id="total-red">â</div>
+      <div class="total-sub">miles de $</div>
+    </div>
+    <div class="total-divider"></div>
+    <div class="stat-block">
+      <div class="total-label">Total incrementos</div>
+      <div class="total-amount green" id="total-inc">â</div>
+      <div class="total-sub">miles de $</div>
+    </div>
+    <div class="total-divider"></div>
+    <div class="stat-block">
+      <div class="stat-num" id="stat-decretos">â</div>
+      <div class="stat-desc">Decretos</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num" id="stat-partidas">â</div>
+      <div class="stat-desc">Servicios</div>
+    </div>
+  </div>
+</div>
+
+<div class="chart-section">
+  <div class="chart-inner">
+    <div class="chart-tabs">
+      <button class="chart-tab active" onclick="setChartMode('red',this)">Reducciones por servicio</button>
+      <button class="chart-tab" onclick="setChartMode('inc',this)">Incrementos por servicio</button>
+      <button class="chart-tab" onclick="setChartMode('neto',this)">VariaciÃ³n neta por servicio</button>
+    </div>
+    <div class="chart-bars" id="chart-bars"><div class="loading">Cargandoâ¦</div></div>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="controls-inner">
+    <div class="search-box">
+      <span class="search-icon">â</span>
+      <input type="text" id="search" placeholder="Buscar ministerio, decretoâ¦" oninput="applyFilters()">
+    </div>
+    <div class="filter-group" id="filter-btns">
+      <button class="filter-btn active" data-tipo="todos" onclick="setFilter(this)">Todos</button>
+      <button class="filter-btn" data-tipo="reduccion" onclick="setFilter(this)">Solo reducciones</button>
+      <button class="filter-btn" data-tipo="incremento" onclick="setFilter(this)">Solo incrementos</button>
+    </div>
+    <select class="sort-select" id="sort-select" onchange="applyFilters()">
+      <option value="red-desc">Mayor reducciÃ³n</option>
+      <option value="inc-desc">Mayor incremento</option>
+      <option value="fecha-asc">Fecha (antiguo)</option>
+      <option value="fecha-desc">Fecha (reciente)</option>
+      <option value="decreto-asc">NÂ° decreto</option>
+    </select>
+  </div>
+</div>
+
+<div class="results-info">
+  <div class="results-inner">
+    <div>Mostrando <span id="result-count" style="color:var(--accent);font-weight:600;">â</span> movimientos<span id="partida-chip" style="display:none"> Â· <span id="partida-chip-name" style="color:var(--accent);font-weight:600"></span> <button onclick="clearPartidaFilter()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:0 3px;font-family:var(--mono)" title="Quitar filtro">â</button></span></div>
+    <div>Reducciones filtradas: <span id="filtered-red" style="color:var(--red);font-weight:600;">â</span> &nbsp;|&nbsp; Incrementos: <span id="filtered-inc" style="color:var(--green);font-weight:600;">â</span></div>
+  </div>
+</div>
+
+<div class="table-container">
+  <div class="table-inner">
+    <table>
+      <thead>
+        <tr>
+          <th onclick="sortBy('decreto_num')">Decreto <span class="sort-arrow">â</span></th>
+          <th onclick="sortBy('nom_partida')">Ministerio <span class="sort-arrow">â</span></th>
+          <th onclick="sortBy('fecha_santiago')">Fecha decreto <span class="sort-arrow">â</span></th>
+          <th onclick="sortBy('fecha_toma_razon')">Toma de razÃ³n <span class="sort-arrow">â</span></th>
+          <th onclick="sortBy('reduccion')" class="sorted"><span class="th-full">ReducciÃ³n (M$)</span><span class="th-short">Red.</span> <span class="sort-arrow">â</span></th>
+          <th onclick="sortBy('incremento')"><span class="th-full">Incremento (M$)</span><span class="th-short">Inc.</span> <span class="sort-arrow">â</span></th>
+          <th onclick="sortBy('variacion_neta')">Neto (M$) <span class="sort-arrow">â</span></th>
+        </tr>
+      </thead>
+      <tbody id="tabla-body">
+        <tr><td colspan="6" class="loading">Cargando datosâ¦</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer-inner">
+    <p>
+      <strong>EducaciÃ³n 2020</strong> Â· Datos: ContralorÃ­a General de la RepÃºblica / DIPRES<br>
+      Montos en miles de pesos chilenos (M$) Â· Solo decretos de Hacienda (modificaciones sector pÃºblico central)
+    </p>
+  </div>
+</div>
+
+<script>
+const _RESUMEN  = {"total_incremento":629611731,"total_reduccion":1474950407,"n_decretos":53,"n_partidas":27};
+const _MOVS     = [{"decreto_id":"127HH","decreto_num":"333","fecha_santiago":"24/04/2026","fecha_toma_razon":"13/05/2026","archivo":"1778679324334-24AECF9E-A2CF-4E20-9F9B-94643234A67B.html","partida":"16","nom_partida":"MINISTERIO DE SALUD","incremento":0,"reduccion":434993140,"variacion_neta":-434993140},{"decreto_id":"167OO","decreto_num":"329","fecha_santiago":"24/04/2026","fecha_toma_razon":"12/05/2026","archivo":"1778616651492-070B7246-3A72-432F-9089-1F00CFF88DA6.html","partida":"18","nom_partida":"MINISTERIO DE VIVIENDA Y URBANISMO","incremento":0,"reduccion":200202804,"variacion_neta":-200202804},{"decreto_id":"169UU","decreto_num":"","fecha_santiago":"23/03/2026","fecha_toma_razon":"","archivo":"Decreto Educacion.pdf.html","partida":"09","nom_partida":"MINISTERIO DE EDUCACIÃN","incremento":0,"reduccion":186241601,"variacion_neta":-186241601},{"decreto_id":"087SS","decreto_num":"330","fecha_santiago":"24/04/2026","fecha_toma_razon":"14/05/2026","archivo":"1778788502095-5B4B92B1-8B97-4E42-B8A4-EE7C1E66936D.html","partida":"15","nom_partida":"MINISTERIO DEL TRABAJO Y PREVISIÃN SOCIAL","incremento":0,"reduccion":141143766,"variacion_neta":-141143766},{"decreto_id":"272VV","decreto_num":"335","fecha_santiago":"24/04/2026","fecha_toma_razon":"13/05/2026","archivo":"1778679467042-AB4EB2A0-876A-4442-8813-CAA341928812.html","partida":"12","nom_partida":"MINISTERIO DE OBRAS PÃBLICAS","incremento":0,"reduccion":131187533,"variacion_neta":-131187533},{"decreto_id":"330VV","decreto_num":"359","fecha_santiago":"05/05/2026","fecha_toma_razon":"08/05/2026","archivo":"1778254019987-D5EA46B4-C093-437E-881F-C9D0DEC27B7E.html","partida":"19","nom_partida":"MINISTERIO DE TRANSPORTES Y TELECOMUNICACIONES","incremento":0,"reduccion":71893000,"variacion_neta":-71893000},{"decreto_id":"0386EE","decreto_num":"374","fecha_santiago":"12/05/2026","fecha_toma_razon":"25/05/2026","archivo":"1779748507668-9A1D9702-E529-4821-A81E-04107AFB3A1F.html","partida":"31","nom_partida":"FINANCIAMIENTO GOBIERNOS REGIONALES","incremento":0,"reduccion":57001425,"variacion_neta":-57001425},{"decreto_id":"278VV","decreto_num":"337","fecha_santiago":"24/04/2026","fecha_toma_razon":"14/05/2026","archivo":"1778766668012-2F64A5A2-6FFB-431B-A20B-9C0396336652.html","partida":"19","nom_partida":"MINISTERIO DE TRANSPORTES Y TELECOMUNICACIONES","incremento":0,"reduccion":56161857,"variacion_neta":-56161857},{"decreto_id":"106MS","decreto_num":"351","fecha_santiago":"24/04/2026","fecha_toma_razon":"14/05/2026","archivo":"1778787580645-62BAE0C3-6B00-4833-8E25-BB22A0DEC8E5.html","partida":"29","nom_partida":"MINISTERIO DE LAS CULTURAS, LAS ARTES Y EL PATRIMONIO","incremento":0,"reduccion":51750380,"variacion_neta":-51750380},{"decreto_id":"0492EE","decreto_num":"360","fecha_santiago":"06/05/2026","fecha_toma_razon":"25/05/2026","archivo":"1779748714095-A471D53F-608F-4557-8A82-FF6B2680DB87.html","partida":"31","nom_partida":"FINANCIAMIENTO GOBIERNOS REGIONALES","incremento":48849518,"reduccion":48849518,"variacion_neta":0},{"decreto_id":"125XX","decreto_num":"336","fecha_santiago":"24/04/2026","fecha_toma_razon":"14/05/2026","archivo":"1778788397327-DC7D2C11-E0BE-4045-9E51-589EC27A39AA.html","partida":"13","nom_partida":"MINISTERIO DE AGRICULTURA","incremento":0,"reduccion":30918950,"variacion_neta":-30918950},{"decreto_id":"163OO","decreto_num":"376","fecha_santiago":"14/05/2026","fecha_toma_razon":"20/05/2026","archivo":"1779293242840-E31A1DA9-B941-4D58-8AC2-C75E534CD5C9.html","partida":"18","nom_partida":"MINISTERIO DE VIVIENDA Y URBANISMO","incremento":12008992,"reduccion":12008992,"variacion_neta":0},{"decreto_id":"126XX","decreto_num":"338","fecha_santiago":"24/04/2026","fecha_toma_razon":"14/05/2026","archivo":"1778772005214-3BB253EC-46F5-4F11-ADDD-BB51D0161FD4.html","partida":"07","nom_partida":"MINISTERIO DE ECONOMÃA, FOMENTO Y TURISMO","incremento":0,"reduccion":7758566,"variacion_neta":-7758566},{"decreto_id":"095HC","decreto_num":"344","fecha_santiago":"24/04/2026","fecha_toma_razon":"12/05/2026","archivo":"1778617167780-249A4EDC-74F9-409E-8492-A289DF0F61B8.html","partida":"26","nom_partida":"MINISTERIO DEL DEPORTE","incremento":0,"reduccion":5743266,"variacion_neta":-5743266},{"decreto_id":"099HC","decreto_num":"334","fecha_santiago":"24/04/2026","fecha_toma_razon":"14/05/2026","archivo":"1778772191711-F7DAAE2C-69B0-4473-8D38-845F0D7D6552.html","partida":"24","nom_partida":"MINISTERIO DE ENERGÃA","incremento":0,"reduccion":5575886,"variacion_neta":-5575886},{"decreto_id":"106MS","decreto_num":"351","fecha_santiago":"24/04/2026","fecha_toma_razon":"14/05/2026","archivo":"1778787580645-62BAE0C3-6B00-4833-8E25-BB22A0DEC8E5.html","partida":"32","nom_partida":"MINISTERIO DE SEGURIDAD PÃBLICA","incremento":0,"reduccion":3526934,"variacion_neta":-3526934},{"decreto_id":"118MS","decreto_num":"347","fecha_santiago":"24/04/2026","fecha_toma_razon":"14/05/2026","archivo":"1778788588439-D2ED0F7D-11AD-42BF-BA5D-88BB63FEBFFF.html","partida":"25","nom_partida":"MINISTERIO DEL MEDIO AMBIENTE","incremento":0,"reduccion":2897524,"variacion_neta":-2897524},{"decreto_id":"103HC","decreto_num":"343","fecha_santiago":"24/04/2026","fecha_toma_razon":"13/05/2026","archivo":"1778680042911-823ABF51-BD7C-4119-A59B-C5A9BB011C2C.html","partida":"27","nom_partida":"MINISTERIO DE LA MUJER Y LA EQUIDAD DE GÃNERO","incremento":0,"reduccion":2741657,"variacion_neta":-2741657},{"decreto_id":"306VV","decreto_num":"324","fecha_santiago":"20/04/2026","fecha_toma_razon":"07/05/2026","archivo":"1778175023394-8B7233BB-1756-4632-93FE-9AC76B903CA9.html","partida":"12","nom_partida":"MINISTERIO DE OBRAS PÃBLICAS","incremento":2400000,"reduccion":2400000,"variacion_neta":0},{"decreto_id":"106MS","decreto_num":"351","fecha_santiago":"24/04/2026","fecha_toma_razon":"14/05/2026","archivo":"1778787580645-62BAE0C3-6B00-4833-8E25-BB22A0DEC8E5.html","partida":"07","nom_partida":"MINISTERIO DE ECONOMÃA, FOMENTO Y TURISMO","incremento":0,"reduccion":2319750,"variacion_neta":-2319750},{"decreto_id":"106MS","decreto_num":"351","fecha_santiago":"24/04/2026","fecha_toma_razon":"14/05/2026","archivo":"1778787580645-62BAE0C3-6B00-4833-8E25-BB22A0DEC8E5.html","partida":"09","nom_partida":"MINISTERIO DE EDUCACIÃN","incremento":0,"reduccion":1797987,"variacion_neta":-1797987},{"decreto_id":"106MS","decreto_num":"351","fecha_santiago":"24/04/2026","fecha_toma_razon":"14/05/2026","archivo":"1778787580645-62BAE0C3-6B00-4833-8E25-BB22A0DEC8E5.html","partida":"20","nom_partida":"MINISTERIO SECRETARÃA GENERAL DE GOBIERNO","incremento":0,"reduccion":1723984,"variacion_neta":-1723984},{"decreto_id":"101HC","decreto_num":"346","fecha_santiago":"24/04/2026","fecha_toma_razon":"12/05/2026","archivo":"1778617051372-443795C3-CF49-4F9F-B330-44267ADB795E.html","partida":"17","nom_partida":"MINISTERIO DE MINERÃA","incremento":0,"reduccion":1643467,"variacion_neta":-1643467},{"decreto_id":"092NN","decreto_num":"349","fecha_santiago":"24/04/2026","fecha_toma_razon":"14/05/2026","archivo":"1778786760076-78D37DD4-5CCD-4161-89DC-E8AFD645905A.html","partida":"28","nom_partida":"SERVICIO ELECTORAL","incremento":0,"reduccion":1173189,"variacion_neta":-1173189},{"decreto_id":"150OO","decreto_num":"373","fecha_santiago":"12/05/2026","fecha_toma_razon":"28/05/2026","archivo":"1780002861087-364D2F16-2C73-436F-AD83-DCDD0643BCD4.html","partida":"14","nom_partida":"MINISTERIO DE BIENES NACIONALES","incremento":1137421,"reduccion":1137421,"variacion_neta":0},{"decreto_id":"087SS","decreto_num":"330","fecha_santiago":"24/04/2026","fecha_toma_razon":"14/05/2026","archivo":"1778788502095-5B4B92B1-8B97-4E42-B8A4-EE7C1E66936D.html","partida":"07","nom_partida":"MINISTERIO DE ECONOMÃA, FOMENTO Y TURISMO","incremento":0,"reduccion":1115073,"variacion_neta":-1115073},{"decreto_id":"169UU","decreto_num":"","fecha_santiago":"23/03/2026","fecha_toma_razon":"","archivo":"Decreto Educacion.pdf.html","partida":"07","nom_partida":"MINISTERIO DE ECONOMÃA, FOMENTO Y TURISMO","incremento":0,"reduccion":1103705,"variacion_neta":-1103705},{"decreto_id":"105NN","decreto_num":"341","fecha_santiago":"24/04/2026","fecha_toma_razon":"14/05/2026","archivo":"1778786096549-17947463-BE58-4E20-9AD3-76ACB12354A5.html","partida":"20","nom_partida":"MINISTERIO SECRETARÃA GENERAL DE GOBIERNO","incremento":0,"reduccion":994320,"variacion_neta":-994320},{"decreto_id":"125XX","decreto_num":"336","fecha_santiago":"24/04/2026","fecha_toma_razon":"14/05/2026","archivo":"1778788397327-DC7D2C11-E0BE-4045-9E51-589EC27A39AA.html","partida":"07","nom_partida":"MINISTERIO DE ECONOMÃA, FOMENTO Y TURISMO","incremento":0,"reduccion":967691,"variacion_neta":-967691},{"decreto_id":"105SS","decreto_num":"365","fecha_santiago":"11/05/2026","fecha_toma_razon":"20/05/2026","archivo":"1779293197542-D45238ED-B1D5-4F91-9A72-DDA30DEDDE75.html","partida":"15","nom_partida":"MINISTERIO DEL TRABAJO Y PREVISIÃN SOCIAL","incremento":0,"reduccion":817867,"variacion_neta":-817867},{"decreto_id":"166JJ","decreto_num":"340","fecha_santiago":"24/04/2026","fecha_toma_razon":"12/05/2026","archivo":"1778616917595-784289D3-3F50-4616-B40D-69519BF1C0A2.html","partida":"06","nom_partida":"MINISTERIO DE RELACIONES EXTERIORES","incremento":0,"reduccion":728432,"variacion_neta":-728432},{"decreto_id":"099NN","decreto_num":"342","fecha_santiago":"24/04/2026","fecha_toma_razon":"12/05/2026","archivo":"1778616798720-841FDE1A-6E0C-462E-9243-FBC5F53DF24E.html","partida":"01","nom_partida":"PRESIDENCIA DE LA REPÃBLICA","incremento":0,"reduccion":706531,"variacion_neta":-706531},{"decreto_id":"126XX","decreto_num":"338","fecha_santiago":"24/04/2026","fecha_toma_razon":"14/05/2026","archivo":"1778772005214-3BB253EC-46F5-4F11-ADDD-BB51D0161FD4.html","partida":"30","nom_partida":"MINISTERIO DE CIENCIA, TECNOLOGÃA, CONOCIMIENTO E INNOVACIÃN","incremento":0,"reduccion":639220,"variacion_neta":-639220},{"decreto_id":"103HC","decreto_num":"343","fecha_santiago":"24/04/2026","fecha_toma_razon":"13/05/2026","archivo":"1778680042911-823ABF51-BD7C-4119-A59B-C5A9BB011C2C.html","partida":"07","nom_partida":"MINISTERIO DE ECONOMÃA, FOMENTO Y TURISMO","incremento":0,"reduccion":636381,"variacion_neta":-636381},{"decreto_id":"280VV","decreto_num":"320","fecha_santiago":"20/04/2026","fecha_toma_razon":"07/05/2026","archivo":"1778175195847-E160AF62-C8CE-4B64-B545-5AEED001DDEF.html","partida":"12","nom_partida":"MINISTERIO DE OBRAS PÃBLICAS","incremento":616319,"reduccion":616319,"variacion_neta":0},{"decreto_id":"106MS","decreto_num":"351","fecha_santiago":"24/04/2026","fecha_toma_razon":"14/05/2026","archivo":"1778787580645-62BAE0C3-6B00-4833-8E25-BB22A0DEC8E5.html","partida":"31","nom_partida":"FINANCIAMIENTO GOBIERNOS REGIONALES","incremento":0,"reduccion":534823,"variacion_neta":-534823},{"decreto_id":"169UU","decreto_num":"","fecha_santiago":"23/03/2026","fecha_toma_razon":"","archivo":"Decreto Educacion.pdf.html","partida":"19","nom_partida":"MINISTERIO DE TRANSPORTES Y TELECOMUNICACIONES","incremento":0,"reduccion":511000,"variacion_neta":-511000},{"decreto_id":"125XX","decreto_num":"336","fecha_santiago":"24/04/2026","fecha_toma_razon":"14/05/2026","archivo":"1778788397327-DC7D2C11-E0BE-4045-9E51-589EC27A39AA.html","partida":"06","nom_partida":"MINISTERIO DE RELACIONES EXTERIORES","incremento":0,"reduccion":500000,"variacion_neta":-500000},{"decreto_id":"106MS","decreto_num":"351","fecha_santiago":"24/04/2026","fecha_toma_razon":"14/05/2026","archivo":"1778787580645-62BAE0C3-6B00-4833-8E25-BB22A0DEC8E5.html","partida":"12","nom_partida":"MINISTERIO DE OBRAS PÃBLICAS","incremento":0,"reduccion":484220,"variacion_neta":-484220},{"decreto_id":"268VV","decreto_num":"318","fecha_santiago":"20/04/2026","fecha_toma_razon":"05/05/2026","archivo":"1778016833865-3031932F-F1E5-457B-AF83-181FD2F2FB66.html","partida":"12","nom_partida":"MINISTERIO DE OBRAS PÃBLICAS","incremento":426925,"reduccion":426925,"variacion_neta":0},{"decreto_id":"094NN","decreto_num":"345","fecha_santiago":"24/04/2026","fecha_toma_razon":"12/05/2026","archivo":"1778617270653-6A03400A-3FAA-450B-A3F8-61D45090BEBA.html","partida":"22","nom_partida":"MINISTERIO SECRETARÃA GENERAL DE LA PRESIDENCIA DE LA REPÃBLICA","incremento":0,"reduccion":371994,"variacion_neta":-371994},{"decreto_id":"173OO","decreto_num":"369","fecha_santiago":"11/05/2026","fecha_toma_razon":"18/05/2026","archivo":"1779131884493-9CAA606F-8E64-42DE-895D-EBF142DA50EB.html","partida":"18","nom_partida":"MINISTERIO DE VIVIENDA Y URBANISMO","incremento":318174,"reduccion":318174,"variacion_neta":0},{"decreto_id":"284VV","decreto_num":"323","fecha_santiago":"20/04/2026","fecha_toma_razon":"11/05/2026","archivo":"1778529692152-BD64947F-AB3F-4313-8640-BB7C56BD7E3B.html","partida":"08","nom_partida":"MINISTERIO DE HACIENDA","incremento":483384,"reduccion":225069,"variacion_neta":258315},{"decreto_id":"145XX","decreto_num":"363","fecha_santiago":"11/05/2026","fecha_toma_razon":"26/05/2026","archivo":"1779817221678-D2351927-6243-4495-9DF8-7BCA216E78CC.html","partida":"07","nom_partida":"MINISTERIO DE ECONOMÃA, FOMENTO Y TURISMO","incremento":0,"reduccion":112611,"variacion_neta":-112611},{"decreto_id":"126XX","decreto_num":"338","fecha_santiago":"24/04/2026","fecha_toma_razon":"14/05/2026","archivo":"1778772005214-3BB253EC-46F5-4F11-ADDD-BB51D0161FD4.html","partida":"13","nom_partida":"MINISTERIO DE AGRICULTURA","incremento":0,"reduccion":108181,"variacion_neta":-108181},{"decreto_id":"110MS","decreto_num":"304","fecha_santiago":"01/04/2026","fecha_toma_razon":"15/04/2026","archivo":"1776260620060-442B7AB5-88A4-467E-A76E-78B7A2CA1065.html","partida":"29","nom_partida":"MINISTERIO DE LAS CULTURAS, LAS ARTES Y EL PATRIMONIO","incremento":103367,"reduccion":103367,"variacion_neta":0},{"decreto_id":"097SS","decreto_num":"362","fecha_santiago":"11/05/2026","fecha_toma_razon":"18/05/2026","archivo":"1779121897100-46731B27-D85A-4703-AFB4-8F277A741A9D.html","partida":"15","nom_partida":"MINISTERIO DEL TRABAJO Y PREVISIÃN SOCIAL","incremento":70100,"reduccion":70100,"variacion_neta":0},{"decreto_id":"105HC","decreto_num":"379","fecha_santiago":"20/05/2026","fecha_toma_razon":"28/05/2026","archivo":"1780004417349-B31D2B89-0AF4-4847-AEB9-1F46596BD4D5.html","partida":"24","nom_partida":"MINISTERIO DE ENERGÃA","incremento":30974,"reduccion":30974,"variacion_neta":0},{"decreto_id":"146XX","decreto_num":"366","fecha_santiago":"11/05/2026","fecha_toma_razon":"26/05/2026","archivo":"1779817381161-49F80AFA-7ACE-4754-8179-5EB4BC8FE6CE.html","partida":"07","nom_partida":"MINISTERIO DE ECONOMÃA, FOMENTO Y TURISMO","incremento":21833,"reduccion":21833,"variacion_neta":0},{"decreto_id":"131HC","decreto_num":"368","fecha_santiago":"11/05/2026","fecha_toma_razon":"26/05/2026","archivo":"1779834402212-B98B753F-F9B6-4A49-81B2-1B59A32959A0.html","partida":"27","nom_partida":"MINISTERIO DE LA MUJER Y LA EQUIDAD DE GÃNERO","incremento":13000,"reduccion":13000,"variacion_neta":0},{"decreto_id":"035NN","decreto_num":"383","fecha_santiago":"20/05/2026","fecha_toma_razon":"28/05/2026","archivo":"1780003282128-22716D38-726B-42C1-87CA-14F401982F82.html","partida":"01","nom_partida":"PRESIDENCIA DE LA REPÃBLICA","incremento":839472,"reduccion":0,"variacion_neta":839472},{"decreto_id":"085NN","decreto_num":"348","fecha_santiago":"24/04/2026","fecha_toma_razon":"04/05/2026","archivo":"1777908516717-28F6A7E2-75EB-408C-87B3-80B01043D61C.html","partida":"04","nom_partida":"CONTRALORÃA GENERAL DE LA REPÃBLICA","incremento":4758014,"reduccion":0,"variacion_neta":4758014},{"decreto_id":"0311EE","decreto_num":"355","fecha_santiago":"28/04/2026","fecha_toma_razon":"05/05/2026","archivo":"1778016490853-5C57F501-AD1D-469D-9AF7-32E1CC1F853D.html","partida":"05","nom_partida":"MINISTERIO DEL INTERIOR","incremento":73182839,"reduccion":0,"variacion_neta":73182839},{"decreto_id":"0558EE","decreto_num":"358","fecha_santiago":"30/04/2026","fecha_toma_razon":"07/05/2026","archivo":"1778196078146-761AC19C-B19B-449B-91F6-7376161F807C.html","partida":"05","nom_partida":"MINISTERIO DEL INTERIOR","incremento":199422000,"reduccion":0,"variacion_neta":199422000},{"decreto_id":"0475EE","decreto_num":"357","fecha_santiago":"30/04/2026","fecha_toma_razon":"07/05/2026","archivo":"1778196045214-C1FD7F70-CA7A-4A4D-8676-72E14EFF865E.html","partida":"05","nom_partida":"MINISTERIO DEL INTERIOR","incremento":5000000,"reduccion":0,"variacion_neta":5000000},{"decreto_id":"292VV","decreto_num":"315","fecha_santiago":"16/04/2026","fecha_toma_razon":"24/04/2026","archivo":"1777057934392-D1D207B2-04CB-4576-BFC6-EFE588F17BC4.html","partida":"08","nom_partida":"MINISTERIO DE HACIENDA","incremento":406612,"reduccion":0,"variacion_neta":406612},{"decreto_id":"264VV","decreto_num":"316","fecha_santiago":"16/04/2026","fecha_toma_razon":"24/04/2026","archivo":"1777058888472-7CEFB29A-DB07-44CB-81A6-EF399A65D4F4.html","partida":"08","nom_partida":"MINISTERIO DE HACIENDA","incremento":257150,"reduccion":0,"variacion_neta":257150},{"decreto_id":"288VV","decreto_num":"321","fecha_santiago":"20/04/2026","fecha_toma_razon":"05/05/2026","archivo":"1778017077666-C0B4B2E4-83CD-451C-9DB1-FD290C463310.html","partida":"08","nom_partida":"MINISTERIO DE HACIENDA","incremento":390538,"reduccion":0,"variacion_neta":390538},{"decreto_id":"275VV","decreto_num":"322","fecha_santiago":"20/04/2026","fecha_toma_razon":"30/04/2026","archivo":"1777561283892-D6B01E8C-FC0D-47BD-9387-DC3FEBEBD6C4.html","partida":"08","nom_partida":"MINISTERIO DE HACIENDA","incremento":226716,"reduccion":0,"variacion_neta":226716},{"decreto_id":"262VV","decreto_num":"319","fecha_santiago":"20/04/2026","fecha_toma_razon":"28/04/2026","archivo":"1777400948426-13607E07-09B6-4589-B6EC-9D4BD56C74C8.html","partida":"08","nom_partida":"MINISTERIO DE HACIENDA","incremento":46368,"reduccion":0,"variacion_neta":46368},{"decreto_id":"184UU","decreto_num":"328","fecha_santiago":"23/04/2026","fecha_toma_razon":"29/04/2026","archivo":"1777489712894-E2F2E21C-4543-4F99-8123-3FD25442AA64.html","partida":"09","nom_partida":"MINISTERIO DE EDUCACIÃN","incremento":11541988,"reduccion":0,"variacion_neta":11541988},{"decreto_id":"107SS","decreto_num":"367","fecha_santiago":"11/05/2026","fecha_toma_razon":"26/05/2026","archivo":"1779817478445-4329B4F3-AE23-408A-82B6-19C2559B47FB.html","partida":"15","nom_partida":"MINISTERIO DEL TRABAJO Y PREVISIÃN SOCIAL","incremento":2009543,"reduccion":0,"variacion_neta":2009543},{"decreto_id":"142HH","decreto_num":"305","fecha_santiago":"01/04/2026","fecha_toma_razon":"12/05/2026","archivo":"1778617377972-7D705961-81BD-432D-9784-BA43CC5CB8D1.html","partida":"16","nom_partida":"MINISTERIO DE SALUD","incremento":32000000,"reduccion":0,"variacion_neta":32000000},{"decreto_id":"160HH","decreto_num":"375","fecha_santiago":"12/05/2026","fecha_toma_razon":"25/05/2026","archivo":"1779748880683-3D79450D-2043-46EF-913F-2BDE9C705197.html","partida":"16","nom_partida":"MINISTERIO DE SALUD","incremento":154963000,"reduccion":0,"variacion_neta":154963000},{"decreto_id":"081NN","decreto_num":"380","fecha_santiago":"20/05/2026","fecha_toma_razon":"28/05/2026","archivo":"1780003180036-6B65CF24-EF08-4F3C-92AF-D1230D47EE33.html","partida":"23","nom_partida":"MINISTERIO PÃBLICO","incremento":4054092,"reduccion":0,"variacion_neta":4054092},{"decreto_id":"079NN","decreto_num":"382","fecha_santiago":"20/05/2026","fecha_toma_razon":"28/05/2026","archivo":"1780003236702-EF895A9F-2E9A-4E34-8F03-22DE8D4DC4D1.html","partida":"28","nom_partida":"SERVICIO ELECTORAL","incremento":6906301,"reduccion":0,"variacion_neta":6906301},{"decreto_id":"0406EE","decreto_num":"317","fecha_santiago":"20/04/2026","fecha_toma_razon":"08/05/2026","archivo":"1778267775507-B964E622-E8FE-4B6C-8BB0-E01F9F9295B9.html","partida":"31","nom_partida":"FINANCIAMIENTO GOBIERNOS REGIONALES","incremento":67127091,"reduccion":0,"variacion_neta":67127091}];
+const _PARTIDAS = [{"partida":"16","nom_partida":"MINISTERIO DE SALUD","incremento":186963000,"reduccion":434993140,"neto":-248030140},{"partida":"18","nom_partida":"MINISTERIO DE VIVIENDA Y URBANISMO","incremento":12327166,"reduccion":212529970,"neto":-200202804},{"partida":"09","nom_partida":"MINISTERIO DE EDUCACIÃN","incremento":11541988,"reduccion":188039588,"neto":-176497600},{"partida":"15","nom_partida":"MINISTERIO DEL TRABAJO Y PREVISIÃN SOCIAL","incremento":2079643,"reduccion":142031733,"neto":-139952090},{"partida":"12","nom_partida":"MINISTERIO DE OBRAS PÃBLICAS","incremento":3443244,"reduccion":135114997,"neto":-131671753},{"partida":"19","nom_partida":"MINISTERIO DE TRANSPORTES Y TELECOMUNICACIONES","incremento":0,"reduccion":128565857,"neto":-128565857},{"partida":"31","nom_partida":"FINANCIAMIENTO GOBIERNOS REGIONALES","incremento":115976609,"reduccion":106385766,"neto":9590843},{"partida":"29","nom_partida":"MINISTERIO DE LAS CULTURAS, LAS ARTES Y EL PATRIMONIO","incremento":103367,"reduccion":51853747,"neto":-51750380},{"partida":"13","nom_partida":"MINISTERIO DE AGRICULTURA","incremento":0,"reduccion":31027131,"neto":-31027131},{"partida":"07","nom_partida":"MINISTERIO DE ECONOMÃA, FOMENTO Y TURISMO","incremento":21833,"reduccion":14035610,"neto":-14013777},{"partida":"26","nom_partida":"MINISTERIO DEL DEPORTE","incremento":0,"reduccion":5743266,"neto":-5743266},{"partida":"24","nom_partida":"MINISTERIO DE ENERGÃA","incremento":30974,"reduccion":5606860,"neto":-5575886},{"partida":"32","nom_partida":"MINISTERIO DE SEGURIDAD PÃBLICA","incremento":0,"reduccion":3526934,"neto":-3526934},{"partida":"25","nom_partida":"MINISTERIO DEL MEDIO AMBIENTE","incremento":0,"reduccion":2897524,"neto":-2897524},{"partida":"27","nom_partida":"MINISTERIO DE LA MUJER Y LA EQUIDAD DE GÃNERO","incremento":13000,"reduccion":2754657,"neto":-2741657},{"partida":"20","nom_partida":"MINISTERIO SECRETARÃA GENERAL DE GOBIERNO","incremento":0,"reduccion":2718304,"neto":-2718304},{"partida":"17","nom_partida":"MINISTERIO DE MINERÃA","incremento":0,"reduccion":1643467,"neto":-1643467},{"partida":"06","nom_partida":"MINISTERIO DE RELACIONES EXTERIORES","incremento":0,"reduccion":1228432,"neto":-1228432},{"partida":"28","nom_partida":"SERVICIO ELECTORAL","incremento":6906301,"reduccion":1173189,"neto":5733112},{"partida":"14","nom_partida":"MINISTERIO DE BIENES NACIONALES","incremento":1137421,"reduccion":1137421,"neto":0},{"partida":"01","nom_partida":"PRESIDENCIA DE LA REPÃBLICA","incremento":839472,"reduccion":706531,"neto":132941},{"partida":"30","nom_partida":"MINISTERIO DE CIENCIA, TECNOLOGÃA, CONOCIMIENTO E INNOVACIÃN","incremento":0,"reduccion":639220,"neto":-639220},{"partida":"22","nom_partida":"MINISTERIO SECRETARÃA GENERAL DE LA PRESIDENCIA DE LA REPÃBLICA","incremento":0,"reduccion":371994,"neto":-371994},{"partida":"08","nom_partida":"MINISTERIO DE HACIENDA","incremento":1810768,"reduccion":225069,"neto":1585699},{"partida":"04","nom_partida":"CONTRALORÃA GENERAL DE LA REPÃBLICA","incremento":4758014,"reduccion":0,"neto":4758014},{"partida":"05","nom_partida":"MINISTERIO DEL INTERIOR","incremento":277604839,"reduccion":0,"neto":277604839},{"partida":"23","nom_partida":"MINISTERIO PÃBLICO","incremento":4054092,"reduccion":0,"neto":4054092}];
+
+let DATOS = [], PARTIDAS = [], chartMode = 'red', currentTipo = 'todos', currentSort = 'red-desc', currentPartida = null, filteredData = [];
+
+function fmt(n) {
+  if (!n || n === 0) return 'â';
+  return n.toLocaleString('es-CL');
+}
+function fmtMM(n) {
+  if (!n) return 'â';
+  if (Math.abs(n) >= 1e9) return (n/1e9).toFixed(1).replace('.',',') + ' MM';
+  if (Math.abs(n) >= 1e6) return (n/1e6).toFixed(0).replace('.',',') + ' M';
+  return n.toLocaleString('es-CL');
+}
+function fmtTabla(n) {
+  if (!n || n === 0) return 'â';
+  if (window.innerWidth < 768) return fmtMM(n);
+  return n.toLocaleString('es-CL');
+}
+function parseFecha(s) {
+  if (!s) return 0;
+  const [d,m,y] = s.split('/');
+  return parseInt(y+m+d);
+}
+
+const NOMBRES = {
+  'MINISTERIO PÃBLICO': 'MINISTERIO PÃBLICO',
+  'MINISTERIO DE LAS CULTURAS, LAS ARTES Y EL PATRIMONIO': 'LAS CULTURAS',
+  'MINISTERIO DE CIENCIA, TECNOLOGÃA, CONOCIMIENTO E INNOVACIÃN': 'CIENCIAS',
+  'MINISTERIO SECRETARÃA GENERAL DE LA PRESIDENCIA DE LA REPÃBLICA': 'SEC. GRAL. PRESIDENCIA',
+  'CONTRALORÃA GENERAL DE LA REPÃBLICA': 'CONTRALORÃA GENERAL',
+  'FINANCIAMIENTO GOBIERNOS REGIONALES': 'GOBIERNOS REGIONALES',
+};
+function normalizarNombre(p) {
+  const nom = p.nom_partida;
+  if (NOMBRES[nom]) return NOMBRES[nom];
+  return nom.replace('MINISTERIO DE LA ','').replace('MINISTERIO DE LOS ','').replace('MINISTERIO DE ','').replace('MINISTERIO DEL ','').replace('MINISTERIO ','');
+}
+
+function init() {
+  DATOS = _MOVS;
+  PARTIDAS = _PARTIDAS;
+  filteredData = [...DATOS];
+
+  document.getElementById('total-red').textContent = fmtMM(_RESUMEN.total_reduccion);
+  document.getElementById('total-inc').textContent = fmtMM(_RESUMEN.total_incremento);
+  document.getElementById('stat-decretos').textContent = _RESUMEN.n_decretos;
+  document.getElementById('stat-partidas').textContent = _RESUMEN.n_partidas;
+
+  renderChart();
+  applyFilters();
+}
+
+function setChartMode(mode, btn) {
+  chartMode = mode;
+  document.querySelectorAll('.chart-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderChart();
+}
+
+function renderChart() {
+  const bars = document.getElementById('chart-bars');
+
+  if (chartMode === 'neto') {
+    const sorted = [...PARTIDAS].sort((a,b) => a.neto - b.neto);
+    const maxAbs = Math.max(...sorted.map(p => Math.abs(p.neto)), 1);
+    bars.innerHTML = sorted.map((p,i) => {
+      const val = p.neto;
+      const pct = (Math.abs(val)/maxAbs*100).toFixed(1);
+      const cls = val < 0 ? 'red' : 'green';
+      const label = (val > 0 ? '+' : '') + fmtMM(val);
+      const sel = currentPartida === p.partida ? ' chart-row-selected' : '';
+      return `<div class="chart-row${sel}" style="animation-delay:${i*0.03}s" onclick="setPartidaFilter('${p.partida}')">
+        <div class="chart-row-label" title="${p.nom_partida}">${normalizarNombre(p)}</div>
+        <div class="chart-row-bar-wrap">
+          <div class="chart-row-bar ${cls}" style="width:${pct}%" data-label="${label}"></div>
+        </div>
+        <div class="chart-row-val" style="color:${val<0?'var(--red)':'var(--green)'}">${label}</div>
+      </div>`;
+    }).join('');
+    return;
+  }
+
+  const top = [...PARTIDAS].sort((a,b) => (chartMode==='red'?b.reduccion-a.reduccion:b.incremento-a.incremento)).slice(0,12);
+  const maxVal = Math.max(...top.map(p => chartMode === 'red' ? p.reduccion : p.incremento), 1);
+  const cls = chartMode === 'red' ? 'red' : 'green';
+  bars.innerHTML = top.map((p,i) => {
+    const val = chartMode === 'red' ? p.reduccion : p.incremento;
+    const pct = (val/maxVal*100).toFixed(1);
+    const label = fmtMM(val);
+    const sel = currentPartida === p.partida ? ' chart-row-selected' : '';
+    return `<div class="chart-row${sel}" style="animation-delay:${i*0.04}s" onclick="setPartidaFilter('${p.partida}')">
+      <div class="chart-row-label" title="${p.nom_partida}">${normalizarNombre(p)}</div>
+      <div class="chart-row-bar-wrap">
+        <div class="chart-row-bar ${cls}" style="width:${pct}%" data-label="${label}"></div>
+      </div>
+      <div class="chart-row-val">${label}</div>
+    </div>`;
+  }).join('');
+}
+
+function setPartidaFilter(partida) {
+  currentPartida = currentPartida === partida ? null : partida;
+  renderChart();
+  applyFilters();
+}
+function clearPartidaFilter() {
+  currentPartida = null;
+  renderChart();
+  applyFilters();
+}
+
+function setFilter(btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentTipo = btn.dataset.tipo;
+  applyFilters();
+}
+
+function sortBy(col) {
+  const sel = document.getElementById('sort-select');
+  const map = { reduccion:'red-desc', incremento:'inc-desc', fecha_santiago:'fecha-desc', fecha_toma_razon:'tdr-desc', nom_partida:'nombre-asc', decreto_num:'decreto-asc' };
+  if (map[col]) sel.value = map[col];
+  currentSort = sel.value;
+  applyFilters();
+  document.querySelectorAll('th').forEach(th => th.classList.remove('sorted'));
+  event.currentTarget.classList.add('sorted');
+}
+
+function applyFilters() {
+  const q = document.getElementById('search').value.toLowerCase();
+  currentSort = document.getElementById('sort-select').value;
+
+  filteredData = DATOS.filter(r => {
+    const matchQ = !q || r.nom_partida.toLowerCase().includes(q) || (r.decreto_num||'').includes(q) || (r.decreto_id||'').toLowerCase().includes(q);
+    const matchTipo = currentTipo === 'todos' ||
+      (currentTipo === 'reduccion' && r.reduccion > 0) ||
+      (currentTipo === 'incremento' && r.incremento > 0);
+    const matchPartida = !currentPartida || r.partida === currentPartida;
+    return matchQ && matchTipo && matchPartida;
+  });
+
+  filteredData.sort((a,b) => {
+    if (currentSort === 'red-desc')    return b.reduccion - a.reduccion;
+    if (currentSort === 'inc-desc')    return b.incremento - a.incremento;
+    if (currentSort === 'fecha-asc')   return parseFecha(a.fecha_santiago) - parseFecha(b.fecha_santiago);
+    if (currentSort === 'fecha-desc')  return parseFecha(b.fecha_santiago) - parseFecha(a.fecha_santiago);
+    if (currentSort === 'tdr-desc')    return parseFecha(b.fecha_toma_razon) - parseFecha(a.fecha_toma_razon);
+    if (currentSort === 'decreto-asc') return parseInt(a.decreto_num||0) - parseInt(b.decreto_num||0);
+    return 0;
+  });
+
+  const totalRed = filteredData.reduce((s,r) => s + (r.reduccion||0), 0);
+  const totalInc = filteredData.reduce((s,r) => s + (r.incremento||0), 0);
+  const maxRed = Math.max(...filteredData.map(r=>r.reduccion||0), 1);
+  const maxInc = Math.max(...filteredData.map(r=>r.incremento||0), 1);
+
+  document.getElementById('result-count').textContent = filteredData.length;
+  document.getElementById('filtered-red').textContent = fmtMM(totalRed);
+  document.getElementById('filtered-inc').textContent = fmtMM(totalInc);
+
+  const chip = document.getElementById('partida-chip');
+  if (currentPartida) {
+    const pa = PARTIDAS.find(p => p.partida === currentPartida);
+    document.getElementById('partida-chip-name').textContent = pa ? normalizarNombre(pa) : currentPartida;
+    chip.style.display = 'inline';
+  } else {
+    chip.style.display = 'none';
+  }
+
+  const tbody = document.getElementById('tabla-body');
+  if (!filteredData.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Sin resultados</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = filteredData.map((r,i) => {
+    const pctRed = r.reduccion ? (r.reduccion/maxRed*100).toFixed(1) : 0;
+    const pctInc = r.incremento ? (r.incremento/maxInc*100).toFixed(1) : 0;
+    const neto = r.variacion_neta;
+    const netoFmt = neto > 0 ? `<span class="monto-green">+${fmt(neto)}</span>` : neto < 0 ? `<span class="monto-red">${fmt(neto)}</span>` : `<span class="monto-zero">0</span>`;
+    return `<tr style="animation-delay:${Math.min(i*0.02,0.4)}s">
+      <td class="td-decreto">${r.archivo
+        ? `<a href="decretos/${r.archivo}" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px dotted var(--accent3)" title="Ver decreto original">DÂ°${r.decreto_num||'?'}</a>`
+        : `DÂ°${r.decreto_num||'?'}`
+      }<br><span style="font-weight:400;color:var(--text-dim)">${r.decreto_id||''}</span></td>
+      <td class="td-ministerio">${r.nom_partida}</td>
+      <td class="td-fecha">${r.fecha_santiago||'â'}</td>
+      <td class="td-fecha">${r.fecha_toma_razon === 'CON ALCANCE'
+        ? `<span style="color:var(--accent2);font-size:10px;font-weight:600">CON ALCANCE</span>`
+        : (r.fecha_toma_razon||'â')}</td>
+      <td class="td-monto">
+        ${r.reduccion ? `<div class="monto-red">${fmtTabla(r.reduccion)}</div><div class="bar-cell"><div class="bar-wrap"><div class="bar-fill-red" style="width:${pctRed}%"></div></div></div>` : '<span class="monto-zero">â</span>'}
+      </td>
+      <td class="td-monto">
+        ${r.incremento ? `<div class="monto-green">${fmtTabla(r.incremento)}</div><div class="bar-cell"><div class="bar-wrap"><div class="bar-fill-green" style="width:${pctInc}%"></div></div></div>` : '<span class="monto-zero">â</span>'}
+      </td>
+      <td class="td-monto">${netoFmt}</td>
+    </tr>`;
+  }).join('');
+}
+
+init();
+</script>
+</body>
+</html>
