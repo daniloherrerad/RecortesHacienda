@@ -187,13 +187,13 @@
     <div class="stat-block">
       <div class="total-label">Total reducciones</div>
       <div class="total-amount red" id="total-red">—</div>
-      <div class="total-sub">miles de $</div>
+      <div class="total-sub">millones de pesos (MM$)</div>
     </div>
     <div class="total-divider"></div>
     <div class="stat-block">
       <div class="total-label">Total incrementos</div>
       <div class="total-amount green" id="total-inc">—</div>
-      <div class="total-sub">miles de $</div>
+      <div class="total-sub">millones de pesos (MM$)</div>
     </div>
     <div class="total-divider"></div>
     <div class="stat-block">
@@ -271,7 +271,7 @@
   <div class="footer-inner">
     <p>
       <strong>Danilo Herrera</strong> · Datos: Contraloría General de la República / DIPRES<br>
-      Montos en miles de pesos chilenos (M$) · Solo decretos de Hacienda (modificaciones sector público central)
+      Montos en millones de pesos (MM$) · Solo decretos de Hacienda (modificaciones sector público central)
     </p>
   </div>
 </div>
@@ -285,18 +285,20 @@ let DATOS = [], PARTIDAS = [], chartMode = 'red', currentTipo = 'todos', current
 
 function fmt(n) {
   if (!n || n === 0) return '—';
-  return n.toLocaleString('es-CL');
+  const mm = n / 1000;
+  if (Math.abs(mm) >= 1000) return (mm/1000).toFixed(1).replace('.',',') + ' MM$';
+  return mm.toFixed(1).replace('.',',') + ' MM$';
 }
 function fmtMM(n) {
   if (!n) return '—';
-  if (Math.abs(n) >= 1e9) return (n/1e9).toFixed(1).replace('.',',') + ' MM';
-  if (Math.abs(n) >= 1e6) return (n/1e6).toFixed(0).replace('.',',') + ' M';
-  return n.toLocaleString('es-CL');
+  const mm = n / 1000;
+  if (Math.abs(mm) >= 1000) return (mm/1000).toFixed(1).replace('.',',') + ' MM$';
+  if (Math.abs(mm) >= 1)    return mm.toFixed(0).replace('.',',') + ' MM$';
+  return (mm).toFixed(2).replace('.',',') + ' MM$';
 }
 function fmtTabla(n) {
   if (!n || n === 0) return '—';
-  if (window.innerWidth < 768) return fmtMM(n);
-  return n.toLocaleString('es-CL');
+  return fmtMM(n);
 }
 function parseFecha(s) {
   if (!s) return 0;
