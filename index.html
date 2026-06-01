@@ -298,7 +298,7 @@ function fmtMM(n) {
 }
 function fmtTabla(n) {
   if (!n || n === 0) return '—';
-  return (n / 1000).toLocaleString('es-CL', {minimumFractionDigits:3, maximumFractionDigits:3}) + ' MM$';
+  return fmtMM(n);
 }
 function parseFecha(s) {
   if (!s) return 0;
