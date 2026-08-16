@@ -259,13 +259,13 @@
     <table>
       <thead>
         <tr>
-          <th data-col="decreto_num" onclick="sortBy('decreto_num')">Decreto <span class="sort-arrow">↕</span></th>
-          <th data-col="nom_partida" onclick="sortBy('nom_partida')">Ministerio <span class="sort-arrow">↕</span></th>
-          <th data-col="fecha_santiago" onclick="sortBy('fecha_santiago')">Fecha decreto <span class="sort-arrow">↕</span></th>
-          <th data-col="fecha_toma_razon" onclick="sortBy('fecha_toma_razon')">Toma de razón <span class="sort-arrow">↕</span></th>
+          <th data-col="decreto_num" onclick="sortBy('decreto_num')">Decreto <span class="sort-arrow">•</span></th>
+          <th data-col="nom_partida" onclick="sortBy('nom_partida')">Ministerio <span class="sort-arrow">•</span></th>
+          <th data-col="fecha_santiago" onclick="sortBy('fecha_santiago')">Fecha decreto <span class="sort-arrow">•</span></th>
+          <th data-col="fecha_toma_razon" onclick="sortBy('fecha_toma_razon')">Toma de razón <span class="sort-arrow">•</span></th>
           <th data-col="reduccion" onclick="sortBy('reduccion')" class="sorted"><span class="th-full">Reducción (M$)</span><span class="th-short">Red.</span> <span class="sort-arrow">↓</span></th>
-          <th data-col="incremento" onclick="sortBy('incremento')"><span class="th-full">Incremento (M$)</span><span class="th-short">Inc.</span> <span class="sort-arrow">↕</span></th>
-          <th data-col="variacion_neta" onclick="sortBy('variacion_neta')">Neto (M$) <span class="sort-arrow">↕</span></th>
+          <th data-col="incremento" onclick="sortBy('incremento')"><span class="th-full">Incremento (M$)</span><span class="th-short">Inc.</span> <span class="sort-arrow">•</span></th>
+          <th data-col="variacion_neta" onclick="sortBy('variacion_neta')">Neto (M$) <span class="sort-arrow">•</span></th>
         </tr>
       </thead>
       <tbody id="tabla-body">
@@ -428,7 +428,7 @@ function updateSortHeaders() {
       if (arrow) arrow.textContent = dir === 'desc' ? '↓' : '↑';
     } else {
       th.classList.remove('sorted');
-      if (arrow) arrow.textContent = '↕';
+      if (arrow) arrow.textContent = '•';
     }
   });
   const sel = document.getElementById('sort-select');
