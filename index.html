@@ -146,6 +146,20 @@
   .bar-fill-green { height:100%; background:#30a070; }
 
   /* FOOTER */
+  .proyectos { background:var(--surface); border-top:1px solid var(--border); padding:28px 40px 32px; }
+  .proyectos-inner { max-width:1400px; margin:0 auto; }
+  .proyectos-kicker { font-family:var(--mono); font-size:10px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent2); margin-bottom:14px; }
+  .proyectos-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+  .proyecto { display:block; background:var(--bg); border:1px solid var(--border); border-top:3px solid var(--accent); padding:16px 18px; text-decoration:none; display:flex; flex-direction:column; color:var(--text); transition:transform .15s, border-color .15s; }
+  .proyecto:hover { transform:translateY(-2px); border-color:var(--accent); }
+  .proyecto-nombre { font-family:var(--display); font-size:24px; letter-spacing:0.02em; line-height:1; }
+  .proyecto-desc { font-size:12.5px; line-height:1.5; margin-top:8px; color:var(--text); opacity:0.8; }
+  .proyecto-url { font-family:var(--mono); font-size:10px; letter-spacing:0.05em; color:var(--accent2); margin-top:auto; padding-top:10px; }
+  .proyecto.actual { background:var(--accent); color:#fff; border-top-color:var(--accent2); }
+  .proyecto.actual .proyecto-desc { color:#fff; }
+  .proyecto.actual .proyecto-url { color:rgba(232,231,255,0.7); }
+  @media (max-width:900px){ .proyectos-grid{grid-template-columns:repeat(2,minmax(0,1fr));} }
+  @media (max-width:560px){ .proyectos{padding:22px 12px;} .proyectos-grid{grid-template-columns:1fr;} }
   .footer { background:var(--accent); border-top:3px solid var(--accent2); padding:16px 40px; }
   .footer-inner { max-width:1400px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
   .footer p { font-family:var(--mono); font-size:10px; color:rgba(232,231,255,0.55); line-height:1.9; }
@@ -299,6 +313,18 @@
     </table>
   </div>
 </div>
+
+<section class="proyectos">
+  <div class="proyectos-inner">
+    <div class="proyectos-kicker">Proyectos asociados · Monitoreo Legislativo</div>
+    <div class="proyectos-grid">
+      <a class="proyecto" href="https://liberadoskast.cl" target="_blank" rel="noopener"><div class="proyecto-nombre">Liberados Kast</div><div class="proyecto-desc">Registro de las rebajas de condena concedidas bajo el ministro Rabat en el gobierno de José Antonio Kast.</div><div class="proyecto-url">liberadoskast.cl ↗</div></a>
+      <a class="proyecto" href="https://presupuestokast.cl" target="_blank" rel="noopener"><div class="proyecto-nombre">Presupuesto Kast</div><div class="proyecto-desc">Análisis comparativo del Presupuesto 2027 de José Antonio Kast.</div><div class="proyecto-url">presupuestokast.cl ↗</div></a>
+      <a class="proyecto" href="https://renunciaskast.cl" target="_blank" rel="noopener"><div class="proyecto-nombre">Renuncias Kast</div><div class="proyecto-desc">Registro de renuncias, ceses y cambios de puesto del gobierno de José Antonio Kast.</div><div class="proyecto-url">renunciaskast.cl ↗</div></a>
+      <div class="proyecto actual"><div class="proyecto-nombre">Recortes Hacienda</div><div class="proyecto-desc">Monitoreo de los decretos de modificación presupuestaria del gobierno.</div><div class="proyecto-url">ESTÁS AQUÍ</div></div>
+    </div>
+  </div>
+</section>
 
 <div class="footer">
   <div class="footer-inner">
